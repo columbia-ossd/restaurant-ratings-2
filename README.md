@@ -21,6 +21,6 @@ Do not commit .class files to the repo! Be sure you only commit .java files.
 
 
 # Communication
-The Slack channel for this project is _#restaurant-ratings-1_
+The Slack channel for this project is _#restaurant-ratings-2_
 
 Please use that channel for communicating with other contributors.
