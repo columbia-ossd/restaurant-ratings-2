@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -47,18 +49,62 @@ public class RatingAnalyzer {
         return total / count;
     }
     
+    public List<Review> getRestaurantsByCuisine(String cuisine) {
+        List<Review> matches = new ArrayList<>();
+
+        for (Review r : reviews) {
+            if (r.cuisine != null && r.cuisine.equals(cuisine)) {
+                matches.add(r);
+            }
+        }
+
+        matches.sort(new Comparator<Review>() {
+            @Override
+            public int compare(Review r1, Review r2) {
+                return r1.restaurant.compareToIgnoreCase(r2.restaurant);
+            }
+        });
+
+        return matches;
+    }
+
+    public void printRestaurantsByCuisine(String cuisine) {
+        List<Review> matches = getRestaurantsByCuisine(cuisine);
+
+        if (matches.size() == 0) {
+            System.out.println("No restaurants found for cuisine: " + cuisine);
+        } else {
+            System.out.println("Restaurants for " + cuisine + ":");
+            for (Review r : matches) {
+                System.out.println(r.restaurant + ": " + r.rating);
+            }
+        }
+    }
+
     public static void main(String[] args) {
     	RatingAnalyzer ra = new RatingAnalyzer("reviews.csv");
     	String input = "";
     	Scanner in = new Scanner(System.in);
+
     	while (input.equalsIgnoreCase("quit") == false) {
     		System.out.print("Enter the cuisine type ('quit' to exit): ");
     		input = in.next();
+
     		if (input.equalsIgnoreCase("quit") == false) {
-	    		System.out.println("Avg rating: " + ra.averageRating(input));
-	    		System.out.println();
+                List<Review> matches = ra.getRestaurantsByCuisine(input);
+
+	    		if (matches.size() == 0) {
+                    System.out.println("No restaurants found for cuisine: " + input);
+                } else {
+                    ra.printRestaurantsByCuisine(input);
+                    System.out.println("Avg rating: " + ra.averageRating(input));
+                }
+                
+                System.out.println();
     		}
     	}
+
+        in.close();
     	System.out.println("Good bye");
     }
 }
