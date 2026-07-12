@@ -11,11 +11,23 @@ public class RatingAnalyzer {
     protected Set<Review> reviews;
 
     public RatingAnalyzer(String file) {
+        reviews = new HashSet<>();
         reviewReader = new ReviewReader(file);
         List<Review> reviewList = reviewReader.readReviews();
-        reviews = new HashSet<>();
         for (Review r : reviewList) {
             reviews.add(r);
+        }
+    }
+
+    public RatingAnalyzer(String[] files) {
+        reviews = new HashSet<>();
+
+        for (int i = 0; i < files.length; i++) {
+            reviewReader = new ReviewReader(files[i]);
+            List<Review> reviewList = reviewReader.readReviews();
+            for (Review r : reviewList) {
+                reviews.add(r);
+            }
         }
     }
 
@@ -82,7 +94,12 @@ public class RatingAnalyzer {
     }
 
     public static void main(String[] args) {
-    	RatingAnalyzer ra = new RatingAnalyzer("reviews.csv");
+        if (args.length == 0) {
+            System.out.println("Error: please provide at least one input file name.");
+            return;
+        }
+
+    	RatingAnalyzer ra = new RatingAnalyzer(args);
     	String input = "";
     	Scanner in = new Scanner(System.in);
 

@@ -3,7 +3,7 @@ This program allows users to see ratings for restaurants based on a specific cui
 
 To run the program, run:
 ```
-java RatingAnalyzer
+java RatingAnalyzer reviews.csv
 ```
 
 # Configuration
