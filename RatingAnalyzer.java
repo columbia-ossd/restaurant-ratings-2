@@ -36,12 +36,20 @@ public class RatingAnalyzer {
     }
 
     public double averageRating(String cuisine) {
+        //if the parameter is null or empty
+        if (cuisine == null || cuisine.isBlank()){
+            return 0;
+        }
+        // if the set of reviews is null or empty
+        if (reviews == null || reviews.isEmpty()) {
+            return 0;
+        }
 
         double total = 0;
         int count = 0;
 
         for (Review r : reviews) {
-            if (r.cuisine != null && r.cuisine.equals(cuisine)) {
+            if (r != null && r.cuisine != null && r.cuisine.equals(cuisine)) {
 
                 if (r.rating != null && r.rating.isBlank() == false) {
                     try {
@@ -56,7 +64,10 @@ public class RatingAnalyzer {
                 }
             }
         }
-
+        // to prevent dividing by 0
+        if (count == 0) {
+            return 0;
+        }
 
         return total / count;
     }
