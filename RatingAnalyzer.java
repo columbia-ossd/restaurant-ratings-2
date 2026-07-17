@@ -93,6 +93,69 @@ public class RatingAnalyzer {
         }
     }
 
+    public void topRated(String cuisine) {
+
+        double max = -1;
+        boolean found = false;
+
+        for (Review r : reviews) {
+            if (r.cuisine != null && r.cuisine.equals(cuisine)) {
+
+                if (r.rating != null && r.rating.isBlank() == false) {
+                    try {
+                        double value = Double.parseDouble(r.rating);
+                        if (value > 0) {
+                            found = true;
+                            if (value > max) {
+                                max = value;
+                            }
+                        }
+                    } catch (NumberFormatException e) {
+                        // skip non-numeric ratings
+                    }
+                }
+            }
+        }
+
+        if (found == false) {
+            System.out.println("No " + cuisine + " restaurants found.");
+            return;
+        }
+
+        List<Review> topRated = new ArrayList<>();
+
+        for (Review r : reviews) {
+            if (r.cuisine != null && r.cuisine.equals(cuisine)) {
+
+                if (r.rating != null && r.rating.isBlank() == false) {
+                    try {
+                        double value = Double.parseDouble(r.rating);
+                        if (value == max) {
+                            topRated.add(r);
+                        }
+                    } catch (NumberFormatException e) {
+                        // skip non-numeric ratings
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < topRated.size() - 1; i++) {
+            for (int j = i + 1; j < topRated.size(); j++) {
+                if (topRated.get(i).restaurant.compareTo(topRated.get(j).restaurant) > 0) {
+                    Review temp = topRated.get(i);
+                    topRated.set(i, topRated.get(j));
+                    topRated.set(j, temp);
+                }
+            }
+        }
+
+        System.out.println("Top-rated " + cuisine + " restaurant(s):");
+        for (Review r : topRated) {
+            System.out.println(r.restaurant + ": " + r.rating);
+        }
+    }
+
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Error: please provide at least one input file name.");
@@ -115,6 +178,7 @@ public class RatingAnalyzer {
                 } else {
                     ra.printRestaurantsByCuisine(input);
                     System.out.println("Avg rating: " + ra.averageRating(input));
+                    ra.topRated(input);
                 }
                 
                 System.out.println();
